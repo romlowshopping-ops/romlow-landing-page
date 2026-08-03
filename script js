@@ -1,0 +1,139 @@
+/* =========================================================
+   ROMLOW — script.js
+   ========================================================= */
+
+/* ----- Scroll reveal via Intersection Observer ----- */
+(function initReveal() {
+  const elements = document.querySelectorAll('.reveal');
+  if (!elements.length) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  elements.forEach((el) => observer.observe(el));
+})();
+
+
+/* ----- Email notification form ----- */
+(function initForm() {
+  const form = document.getElementById('notifyForm');
+  const input = document.getElementById('emailInput');
+  const messageEl = document.getElementById('formMessage');
+  const btn = form ? form.querySelector('.notify__btn') : null;
+
+  if (!form) return;
+
+  function setMessage(text, type) {
+    messageEl.textContent = text;
+    messageEl.className = 'notify__message notify__message--' + type;
+  }
+
+  function clearMessage() {
+    messageEl.textContent = '';
+    messageEl.className = 'notify__message';
+  }
+
+  function setLoading(loading) {
+    if (loading) {
+      btn.classList.add('notify__btn--loading');
+      btn.disabled = true;
+      input.disabled = true;
+    } else {
+      btn.classList.remove('notify__btn--loading');
+      btn.disabled = false;
+      input.disabled = false;
+    }
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
+
+  /* 
+   * submitEmail — swap this function body to connect a real backend.
+   * Options:
+   *   Formspree:  fetch('https://formspree.io/f/YOUR_ID', { method:'POST', body: JSON.stringify({email}), headers:{'Content-Type':'application/json'} })
+   *   Mailchimp:  POST to your Mailchimp subscribe endpoint
+   *   Brevo:      POST to https://api.brevo.com/v3/contacts with API key header
+   */
+  async function submitEmail(email) {
+    /* Simulated delay — replace with real API call */
+    return new Promise((resolve) => setTimeout(() => resolve({ ok: true }), 1400));
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearMessage();
+
+    const email = input.value.trim();
+
+    if (!email) {
+      setMessage('Please enter your email address.', 'error');
+      input.focus();
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setMessage('Please enter a valid email address.', 'error');
+      input.focus();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const result = await submitEmail(email);
+      if (result.ok) {
+        setMessage("You're on the list! We'll notify you when we launch.", 'success');
+        input.value = '';
+      } else {
+        setMessage('Something went wrong. Please try again.', 'error');
+      }
+    } catch {
+      setMessage('Network error. Please check your connection and try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  /* Clear error on input */
+  input.addEventListener('input', () => {
+    if (messageEl.classList.contains('notify__message--error')) {
+      clearMessage();
+    }
+  });
+})();
+
+
+/* ----- Smooth scroll for anchor links ----- */
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener('click', (e) => {
+    const target = document.querySelector(anchor.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+
+/* ----- Respect prefers-reduced-motion ----- */
+(function checkReducedMotion() {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (mq.matches) {
+    document.documentElement.classList.add('reduced-motion');
+  }
+  mq.addEventListener('change', (e) => {
+    document.documentElement.classList.toggle('reduced-motion', e.matches);
+  });
+})();
+
