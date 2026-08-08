@@ -1,237 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="ROMLOW — A premium fashion and streetwear brand. Our website is coming soon. Be the first to know when we launch." />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Romlow — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg: #08090a;
+    --ink: #f5f4f1;
+    --ink-dim: rgba(245,244,241,0.6);
+    --ink-faint: rgba(245,244,241,0.38);
+    --glass-fill: rgba(255,255,255,0.055);
+    --glass-fill-strong: rgba(255,255,255,0.09);
+    --glass-border: rgba(255,255,255,0.16);
+    --glass-highlight: rgba(255,255,255,0.55);
+  }
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="ROMLOW — Coming Soon" />
-  <meta property="og:description" content="We're working on something amazing. A better shopping experience is on the way." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/5.png" />
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Geist', sans-serif;
+    min-height:100svh;
+    overflow-x:hidden;
+    position:relative;
+  }
 
-  <title>ROMLOW — Coming Soon</title>
+  /* ---------- liquid backdrop ---------- */
+  .backdrop{
+    position:fixed; inset:0; z-index:0;
+    background:var(--bg);
+    overflow:hidden;
+  }
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:0.55;
+    will-change:transform;
+  }
+  .blob-a{
+    width:52vw; height:52vw; max-width:680px; max-height:680px;
+    top:-14%; left:-10%;
+    background:radial-gradient(circle at 30% 30%, #5b6bff, transparent 65%);
+    animation: drift1 26s ease-in-out infinite;
+  }
+  .blob-b{
+    width:46vw; height:46vw; max-width:600px; max-height:600px;
+    bottom:-16%; right:-8%;
+    background:radial-gradient(circle at 60% 60%, #ff7a5c, transparent 65%);
+    animation: drift2 32s ease-in-out infinite;
+  }
+  .blob-c{
+    width:38vw; height:38vw; max-width:520px; max-height:520px;
+    top:38%; left:58%;
+    background:radial-gradient(circle at 50% 50%, #37e0c4, transparent 65%);
+    opacity:0.35;
+    animation: drift3 22s ease-in-out infinite;
+  }
+  .grain{
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+  .scrim{ position:absolute; inset:0; background:rgba(6,7,8,0.42); backdrop-filter: blur(0.5px); }
 
-  <!-- Favicon placeholder -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='black'/><rect x='5' y='30' width='90' height='40' fill='white'/><text x='50' y='58' font-family='Arial Black,sans-serif' font-size='26' font-weight='900' text-anchor='middle' fill='black' letter-spacing='4'>ROMLOW</text></svg>" />
+  @keyframes drift1{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(6%, 8%) scale(1.08); }
+  }
+  @keyframes drift2{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(-7%, -6%) scale(1.1); }
+  }
+  @keyframes drift3{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(-5%, 9%) scale(0.94); }
+  }
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  /* ---------- layout ---------- */
+  main{
+    position:relative; z-index:1;
+    min-height:100svh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:8vh 20px;
+  }
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  .fade{ opacity:0; animation:fadeUp 1s cubic-bezier(.16,1,.3,1) forwards; }
+  .fade.d1{ animation-delay:.05s; }
+  .fade.d2{ animation-delay:.25s; }
+  .fade.d3{ animation-delay:.45s; }
+  .fade.d4{ animation-delay:.65s; }
+  .fade.d5{ animation-delay:.85s; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:translateY(0);} }
 
-  <link rel="stylesheet" href="style.css" />
+  /* ---------- liquid glass primitives ---------- */
+  .glass{
+    position:relative;
+    background:
+      linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 40%, rgba(255,255,255,0.05) 100%),
+      var(--glass-fill);
+    border:1px solid var(--glass-border);
+    border-radius:28px;
+    backdrop-filter: blur(26px) saturate(160%);
+    -webkit-backdrop-filter: blur(26px) saturate(160%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.18) inset,
+      0 0 0 1px rgba(0,0,0,0.2),
+      0 24px 60px -20px rgba(0,0,0,0.65);
+  }
+  .glass::before{
+    content:"";
+    position:absolute; inset:0;
+    border-radius:inherit;
+    background: radial-gradient(320px circle at var(--mx,50%) var(--my,20%), rgba(255,255,255,0.16), transparent 60%);
+    opacity:0.9;
+    pointer-events:none;
+    transition:opacity .3s ease;
+  }
+
+  .hero-panel{
+    width:100%;
+    max-width:620px;
+    padding:clamp(32px,6vw,56px) clamp(24px,6vw,52px);
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+  }
+
+  /* logo chip: liquid-glass take on the boxed wordmark */
+  .logo-chip{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:14px 30px;
+    border-radius:999px;
+    background:linear-gradient(145deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06));
+    border:1px solid rgba(255,255,255,0.28);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 12px 30px -14px rgba(0,0,0,0.6);
+  }
+  .logo-chip span{
+    font-weight:700;
+    font-size:clamp(16px,2.6vw,22px);
+    letter-spacing:0.32em;
+    color:var(--ink);
+  }
+  .estd{
+    margin-top:14px;
+    font-size:11px;
+    letter-spacing:0.45em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  .eyebrow{
+    margin-top:38px;
+    font-size:11px;
+    letter-spacing:0.4em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+  }
+  h1{
+    margin-top:16px;
+    font-weight:600;
+    font-size:clamp(28px,5.4vw,46px);
+    letter-spacing:-0.01em;
+    line-height:1.1;
+    background:linear-gradient(180deg, #ffffff, rgba(255,255,255,0.72));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  p.sub{
+    margin-top:16px;
+    max-width:420px;
+    font-size:15px;
+    line-height:1.7;
+    color:var(--ink-dim);
+    font-weight:300;
+  }
+
+  /* countdown */
+  .countdown{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    width:100%;
+    max-width:420px;
+  }
+  .count-cell{
+    border-radius:18px;
+    padding:16px 6px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.13);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .count-cell .num{
+    display:block;
+    font-size:clamp(20px,4.4vw,28px);
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .count-cell .lbl{
+    display:block;
+    margin-top:4px;
+    font-size:9.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  /* notify form */
+  .notify{
+    margin-top:36px;
+    width:100%;
+    max-width:420px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .notify-label{
+    font-size:10.5px;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+  .notify-row{
+    display:flex;
+    gap:10px;
+    border-radius:999px;
+    padding:6px;
+    background:rgba(255,255,255,0.055);
+    border:1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .notify-row input{
+    flex:1;
+    min-width:0;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--ink);
+    font-family:'Geist', sans-serif;
+    font-size:14px;
+    padding:11px 16px;
+  }
+  .notify-row input::placeholder{ color:var(--ink-faint); }
+  .notify-row button{
+    border:none;
+    border-radius:999px;
+    padding:11px 22px;
+    background:linear-gradient(160deg, #ffffff, #dcdcdc);
+    color:#0a0a0a;
+    font-family:'Geist', sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.02em;
+    cursor:pointer;
+    transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease;
+  }
+  .notify-row button:hover{ transform:translateY(-1px); box-shadow:0 10px 24px -10px rgba(255,255,255,0.35); }
+  .notify-row button:active{ transform:translateY(0); }
+
+  /* get in touch */
+  .touch{
+    margin-top:40px;
+    width:100%;
+  }
+  .touch-label{
+    font-size:10.5px;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:16px;
+  }
+  .social-row{
+    display:flex;
+    align-items:center; justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 20px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.16);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    color:var(--ink);
+    text-decoration:none;
+    font-size:13px;
+    font-weight:500;
+    box-shadow:0 1px 0 rgba(255,255,255,0.14) inset;
+    transition: background .25s ease, transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease;
+  }
+  .pill svg{ width:15px; height:15px; }
+  .pill:hover{
+    background:rgba(255,255,255,0.14);
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px -14px rgba(255,255,255,0.3), 0 1px 0 rgba(255,255,255,0.2) inset;
+  }
+  .pill:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+  footer{
+    position:relative; z-index:1;
+    text-align:center;
+    padding:26px 20px 34px;
+    font-size:10.5px;
+    letter-spacing:0.25em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  @media (max-width:420px){
+    .notify-row{ flex-direction:column; border-radius:22px; padding:10px; }
+    .notify-row button{ width:100%; }
+    .social-row{ flex-direction:column; width:100%; }
+    .pill{ width:100%; justify-content:center; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .blob{ animation:none; }
+    .fade{ animation:none; opacity:1; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
-  <header class="header" role="banner">
-    <div class="header__inner">
-      <a href="#" class="header__logo" aria-label="ROMLOW Home">
-        <svg class="header__logo-svg" viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" aria-label="ROMLOW ESTD 2019" role="img">
-          <rect x="12" y="20" width="336" height="80" fill="white"/>
-          <text x="180" y="76" font-family="'Montserrat','Arial Black',sans-serif" font-size="52" font-weight="800" text-anchor="middle" fill="black" letter-spacing="14">ROMLOW</text>
-          <text x="180" y="118" font-family="'Montserrat',Arial,sans-serif" font-size="16" font-weight="500" text-anchor="middle" fill="white" letter-spacing="12">ESTD 2019</text>
-        </svg>
-      </a>
-      <nav class="header__nav" aria-label="Social navigation">
-        <span class="header__follow-text">FOLLOW US</span>
-        <a href="https://www.instagram.com/romlow.shopping/" target="_blank" rel="noopener noreferrer" class="header__icon-btn" aria-label="Follow us on Instagram">
-          <i class="fa-brands fa-instagram" aria-hidden="true"></i>
-        </a>
-        <a href="#" class="header__icon-btn" aria-label="Shopping bag">
-          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-        </a>
-      </nav>
-    </div>
-  </header>
+  <div class="backdrop">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+    <div class="scrim"></div>
+    <div class="grain"></div>
+  </div>
 
-  <!-- ===== HERO ===== -->
   <main>
-    <section class="hero" aria-labelledby="hero-heading">
-      <div class="hero__inner">
-        <p class="hero__eyebrow reveal">OUR WEBSITE IS</p>
-        <h1 class="hero__heading reveal reveal--delay-1" id="hero-heading">COMING SOON</h1>
-        <div class="hero__divider reveal reveal--delay-2" aria-hidden="true"></div>
-        <p class="hero__subtext reveal reveal--delay-3">
-          We're working on something amazing.<br />
-          A better shopping experience is on the way.
-        </p>
+    <div class="hero-panel glass fade d1" id="heroPanel">
 
-        <!-- Email Form -->
-        <div class="notify reveal reveal--delay-4">
-          <form class="notify__form" id="notifyForm" novalidate aria-label="Email notification signup">
-            <label for="emailInput" class="sr-only">Email address</label>
-            <div class="notify__field-wrap">
-              <input
-                type="email"
-                id="emailInput"
-                name="email"
-                class="notify__input"
-                placeholder="Enter your email"
-                autocomplete="email"
-                required
-                aria-required="true"
-                aria-describedby="formMessage"
-              />
-              <button type="submit" class="notify__btn" aria-label="Notify me when the site launches">
-                <span class="notify__btn-text">NOTIFY ME</span>
-                <span class="notify__btn-spinner" aria-hidden="true"></span>
-              </button>
-            </div>
-          </form>
-          <p class="notify__hint">Be the first to know when we launch.</p>
-          <!-- ARIA live region for form messages -->
-          <div id="formMessage" class="notify__message" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="fade d1">
+        <div class="logo-chip"><span>ROMLOW</span></div>
+        <div class="estd">Estd 2019</div>
+      </div>
+
+      <div class="fade d2">
+        <p class="eyebrow">Something new is coming</p>
+        <h1>We are launching soon</h1>
+        <p class="sub">We're putting the finishing touches on it. Follow along or get in touch, and be the first to know when the doors open.</p>
+      </div>
+
+      <div class="countdown fade d3" id="countdown-container">
+        <div class="count-cell"><span class="num" id="days">00</span><span class="lbl">Days</span></div>
+        <div class="count-cell"><span class="num" id="hours">00</span><span class="lbl">Hrs</span></div>
+        <div class="count-cell"><span class="num" id="minutes">00</span><span class="lbl">Min</span></div>
+        <div class="count-cell"><span class="num" id="seconds">00</span><span class="lbl">Sec</span></div>
+      </div>
+      <div class="fade d3" id="live-message" style="display:none; margin-top:40px;">
+        <h2 style="font-weight:600; font-size:24px;">We're live!</h2>
+      </div>
+
+      <form class="notify fade d4">
+        <span class="notify-label">Be the first to know</span>
+        <div class="notify-row">
+          <input type="email" placeholder="Email address" required/>
+          <button type="submit">Notify me</button>
+        </div>
+      </form>
+
+      <div class="touch fade d5">
+        <div class="touch-label">Get in touch</div>
+        <div class="social-row">
+          <a class="pill" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+            Instagram
+          </a>
+          <a class="pill" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 3h-2a5 5 0 0 0-5 5v2H6v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook
+          </a>
+          <a class="pill" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c0 2.5 2 4.5 4.5 4.5"/></svg>
+            TikTok
+          </a>
         </div>
       </div>
-    </section>
 
-    <!-- ===== FEATURES ===== -->
-    <section class="features" aria-label="Brand features">
-      <div class="features__inner">
-
-        <div class="features__item reveal">
-          <div class="features__icon-wrap" aria-hidden="true">
-            <i class="fa-solid fa-truck-fast"></i>
-          </div>
-          <h2 class="features__title">SAME DAY DELIVERY</h2>
-          <p class="features__desc">Around Colombo Areas</p>
-        </div>
-
-        <div class="features__sep" aria-hidden="true"></div>
-
-        <div class="features__item reveal">
-          <div class="features__icon-wrap" aria-hidden="true">
-            <i class="fa-solid fa-hand-holding-dollar"></i>
-          </div>
-          <h2 class="features__title">CASH ON DELIVERY</h2>
-          <p class="features__desc">Safe &amp; Easy Payments</p>
-        </div>
-
-        <div class="features__sep" aria-hidden="true"></div>
-
-        <div class="features__item reveal">
-          <div class="features__icon-wrap" aria-hidden="true">
-            <i class="fa-solid fa-award"></i>
-          </div>
-          <h2 class="features__title">PREMIUM QUALITY</h2>
-          <p class="features__desc">Carefully Selected</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ===== PRODUCT SHOWCASE ===== -->
-    <section class="showcase" aria-label="Product showcase">
-      <div class="showcase__grid">
-
-        <!-- Shopping bag -->
-        <div class="showcase__item showcase__item--bag reveal">
-          <img
-            src="/assets/hipster-style-bearded-man-white-shirt-studio-black-background.jpg"
-            alt="ROMLOW model — editorial fashion"
-            class="showcase__img"
-            loading="lazy"
-          />
-          <div class="showcase__brand-overlay">
-            <span class="showcase__brand-name">ROMLOW</span>
-            <span class="showcase__brand-estd">ESTD 2019</span>
-          </div>
-        </div>
-
-        <!-- Hoodie -->
-        <div class="showcase__item showcase__item--hoodie reveal reveal--delay-1">
-          <img
-            src="/assets/image.png"
-            alt="ROMLOW black t-shirts on hanger"
-            class="showcase__img"
-            loading="lazy"
-          />
-          <div class="showcase__brand-overlay showcase__brand-overlay--center">
-            <span class="showcase__brand-name">ROMLOW</span>
-            <span class="showcase__brand-estd">ESTD 2019</span>
-          </div>
-        </div>
-
-        <!-- Cap + Plant column -->
-        <div class="showcase__item showcase__item--side reveal reveal--delay-2">
-          <div class="showcase__sub showcase__sub--cap">
-            <img
-              src="/assets/image.png"
-              alt="ROMLOW black t-shirts on hanger"
-              class="showcase__img"
-              loading="lazy"
-            />
-            <div class="showcase__brand-overlay showcase__brand-overlay--sm">
-              <span class="showcase__brand-name">ROMLOW</span>
-              <span class="showcase__brand-estd">ESTD 2019</span>
-            </div>
-          </div>
-          <div class="showcase__sub showcase__sub--plant">
-            <img
-              src="/assets/hipster-style-bearded-man-white-shirt-studio-black-background.jpg"
-              alt="ROMLOW model — editorial fashion"
-              class="showcase__img"
-              loading="lazy"
-            />
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ===== INFO CARD ===== -->
-    <section class="info" aria-label="Stay updated and shop on Instagram">
-      <div class="info__card reveal">
-
-        <div class="info__col">
-          <div class="info__icon-circle" aria-hidden="true">
-            <i class="fa-solid fa-envelope"></i>
-          </div>
-          <div class="info__content">
-            <h2 class="info__heading">STAY UPDATED</h2>
-            <p class="info__text">Exclusive updates, new arrivals and special offers straight to your inbox.</p>
-          </div>
-        </div>
-
-        <div class="info__sep" aria-hidden="true"></div>
-
-        <div class="info__col">
-          <div class="info__icon-circle" aria-hidden="true">
-            <i class="fa-brands fa-instagram"></i>
-          </div>
-          <div class="info__content">
-            <h2 class="info__heading">SHOP WITH US ON INSTAGRAM</h2>
-            <p class="info__text">Check out our collections, place your orders and stay connected.</p>
-            <a
-              href="https://www.instagram.com/romlow.shopping/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="info__ig-btn"
-              aria-label="Visit ROMLOW on Instagram"
-            >
-              <span>@romlow.shopping</span>
-              <i class="fa-solid fa-arrow-up-right-from-square info__ig-arrow" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
+    </div>
   </main>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer" role="contentinfo">
-    <p class="footer__copy">&copy; 2026 ROMLOW. ALL RIGHTS RESERVED.</p>
-  </footer>
+  <footer>© 2026 Romlow — All rights reserved</footer>
 
-  <script src="script.js"></script>
+<script>
+  // specular highlight follows the pointer across the glass panel
+  const panel = document.getElementById('heroPanel');
+  panel.addEventListener('pointermove', (e) => {
+    const r = panel.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100;
+    const y = ((e.clientY - r.top) / r.height) * 100;
+    panel.style.setProperty('--mx', x + '%');
+    panel.style.setProperty('--my', y + '%');
+  });
+
+  // Countdown — placeholder target date, replace with the real launch date
+  const countdownContainer = document.getElementById('countdown-container');
+  const liveMessage = document.getElementById('live-message');
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minutesEl = document.getElementById('minutes');
+  const secondsEl = document.getElementById('seconds');
+
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + 14);
+
+  function updateCountdown() {
+    const diff = targetDate - new Date();
+    if (diff <= 0) {
+      countdownContainer.style.display = 'none';
+      liveMessage.style.display = 'block';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    daysEl.textContent = String(d).padStart(2,'0');
+    hoursEl.textContent = String(h).padStart(2,'0');
+    minutesEl.textContent = String(m).padStart(2,'0');
+    secondsEl.textContent = String(s).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
 </body>
 </html>
-
