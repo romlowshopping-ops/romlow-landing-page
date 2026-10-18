@@ -410,8 +410,7 @@
   const minutesEl = document.getElementById('minutes');
   const secondsEl = document.getElementById('seconds');
 
-  const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 14);
+  const targetDate = new Date('2026-11-01T00:00:00+05:30');
 
   function updateCountdown() {
     const diff = targetDate - new Date();
